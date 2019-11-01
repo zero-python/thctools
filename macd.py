@@ -7,6 +7,7 @@ Date: 2018-09-29
 """
 from TechnicalIndex.base import EMAEventWindow
 from TechnicalIndex.common import DataSeries
+import pandas as pd
 
 
 class MACD(DataSeries):
@@ -44,6 +45,7 @@ class MACD(DataSeries):
         self.__slowEMAValue.onLastValue(macd_dict['EMA26'])
         self.__signalEMAValue.onLastValue(macd_dict['DEA'])
 
+
 class MacdManger:
 
     def __init__(self, close_value, last_macd=None, fastEMA=12, slowEMA=26, signalEMA=9):
@@ -60,4 +62,4 @@ class MacdManger:
             macds.oneLastValue(self.__last_macd)
         for key, value in self.__close_value:
             data.appendWithDateTime(key, float(value))
-        return macds.data
+        return pd.DataFrame(macds.data)

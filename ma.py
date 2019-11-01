@@ -7,13 +7,12 @@ Date: 2018-09-24
 """
 from TechnicalIndex.base import SMAEventWindow
 from TechnicalIndex.common import DataSeries
-
+import pandas as pd
 
 class MA(DataSeries):
     def __init__(self, data, M5=5, M10=10, M20=20,M60=60, maxLen=None):
 
         super(MA, self).__init__()
-
         self.__MA5Value = SMAEventWindow(M5)
         self.__MA10Value = SMAEventWindow(M10)
         self.__MA20Value = SMAEventWindow(M20)
@@ -69,5 +68,6 @@ class MAManger:
             ma_obj.oneLastValue(self.__last_ma)
         for key, value in self.__close_value:
             data.appendWithDateTime(key, float(value))
-        return ma_obj.data
+
+        return pd.DataFrame(ma_obj.data)
 

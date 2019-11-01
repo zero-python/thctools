@@ -8,6 +8,7 @@ Date: 2018-09-19
 
 from TechnicalIndex.base import KDJEvenWindow, RSVEvenWindows
 from TechnicalIndex.common import DataSeries
+import pandas as pd
 
 
 class KDJ(DataSeries):
@@ -64,7 +65,6 @@ class KDJManger:
         for info_dict in self.__close_value:
             value_time = info_dict['date']
             value_list = [float(info_dict['close']), float(info_dict['low']), float(info_dict['high'])]
-
             data.appendWithDateTime(value_time, value_list)
-        return kdjs.data
+        return pd.DataFrame(kdjs.data)
 
