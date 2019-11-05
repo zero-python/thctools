@@ -7,10 +7,13 @@ Date: 2018-09-20
 """
 
 from decimal import Decimal, getcontext
-from TechnicalIndex import WindowEvent
+from Technical import WindowEvent
 
 
 class EMAEventWindow(WindowEvent):
+    """
+    MA 事件驱动的具体实现过程
+    """
     def __init__(self, maxLen):
         super(EMAEventWindow, self).__init__(maxLen)
         self.__value = 0
@@ -19,6 +22,11 @@ class EMAEventWindow(WindowEvent):
         self.__lasterFact = (maxLen - 1) / (maxLen + 1)
 
     def oneNewValue(self, value):
+        """
+        新增值的计算
+        :param value:
+        :return:
+        """
         super(EMAEventWindow, self).oneNewValue(value)
         if self.getValueLen() == 1:
             self.__value = value
@@ -26,15 +34,24 @@ class EMAEventWindow(WindowEvent):
             self.__value = (self.__value * self.__lasterFact) + (value * self.__multiplier)
 
     def onLastValue(self, value):
+        """
+        填充历史数据，增量计算，需要提前填充历史依赖数据
+        :param value:
+        :return:
+        """
         super(EMAEventWindow, self).oneNewValue(value)
         self.__value = value
 
     def getValue(self):
+
         value = float(Decimal(str(self.__value)).quantize(Decimal('0.000')))
         return value
 
 
 class KDJEvenWindow(WindowEvent):
+    """
+    kdj 事件驱动的具体实现过程
+    """
     def __init__(self, maxLen):
         super(KDJEvenWindow, self).__init__(maxLen)
         self.__value = 50
@@ -42,9 +59,15 @@ class KDJEvenWindow(WindowEvent):
         self.__lasterFact = 1 / maxLen
 
     def oneNewValue(self, value):
+        """
+        新增值，计算具体实现
+        """
         self.__value = (self.__value * self.__multiplier) + (value * self.__lasterFact)
 
     def oneLastValue(self, value):
+        """
+        填充历史数据
+        """
         self.setValues(value)
         self.__value = value[-1]
 
@@ -54,11 +77,16 @@ class KDJEvenWindow(WindowEvent):
 
 
 class RSVEvenWindows(WindowEvent):
+    """rsv 事件驱动的具体实现过程"""
+
     def __init__(self, maxLen):
         super(RSVEvenWindows, self).__init__(maxLen)
         self.__value = 0
 
     def oneNewValue(self, value):
+        """
+        新增值驱动计算
+        """
         super(RSVEvenWindows, self).oneNewValue(value)
         if not self.windowfull():
             self.__value = 0
@@ -70,6 +98,9 @@ class RSVEvenWindows(WindowEvent):
             self.__value = (C-L)/(H-L)*100
 
     def oneLastValue(self, value):
+        """
+        填充历史数据
+        """
         self.setValues(value)
 
     def getValue(self):
@@ -78,12 +109,18 @@ class RSVEvenWindows(WindowEvent):
 
 
 class SMAEventWindow(WindowEvent):
+    """
+    SMA 事件驱动的具体实现过程
+    """
     def __init__(self, period):
         assert(period > 0)
         super(SMAEventWindow, self).__init__(period)
         self.__value = None
 
     def oneNewValue(self, value):
+        """
+        新增值驱动计算
+        """
         firstValue = None
         if len(self.getValues()) > 0:
             firstValue = self.getValues()[0]
@@ -97,6 +134,9 @@ class SMAEventWindow(WindowEvent):
                 self.__value = self.__value + value / float(self.getValueLen()) - firstValue / float(self.getValueLen())
 
     def onLastValue(self, MA, values):
+        """
+        填充历史数据
+        """
         self.__value = MA
         self.setValues(values)
 
@@ -104,10 +144,14 @@ class SMAEventWindow(WindowEvent):
         return self.__value
 
     def getFirstValue(self):
+        """
+        获取第一条数据
+        """
         return self.getValues()[0]
 
 
 class RSEventWindow(WindowEvent):
+    """RS 事件驱动的具体实现过程"""
     def __init__(self, period):
         assert(period > 0)
         super(RSEventWindow, self).__init__(period)
@@ -117,6 +161,9 @@ class RSEventWindow(WindowEvent):
         self.__period = period
 
     def oneNewValue(self, value):
+        """
+        新增值驱动计算
+        """
         super(RSEventWindow, self).oneNewValue(value)
         if value is not None and self.windowfull():
             if self.__prevGain is None:
@@ -138,6 +185,10 @@ class RSEventWindow(WindowEvent):
             self.__prevLoss = avgLoss
 
     def oneLastValue(self, avgGain, avgLoss, value):
+        """
+        填充历史数据
+        :return:
+        """
         self.setValues(value)
         self.__prevLoss = avgLoss
         self.__prevGain = avgGain
@@ -156,12 +207,7 @@ class RSEventWindow(WindowEvent):
 
     def gainLossOne(self, prevValue, nextValue):
         change = nextValue - prevValue
-        if change < 0:
-            gain = 0
-            loss = abs(change)
-        else:
-            gain = change
-            loss = 0
+        gain, loss = 0, abs(change) if change<0 else change, 0
         return gain, loss
 
     def getValue(self):

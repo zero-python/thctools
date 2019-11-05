@@ -5,8 +5,8 @@ Author: zero
 Email: 13256937698@163.com
 Date: 2018-09-29
 """
-from TechnicalIndex.base import RSEventWindow
-from TechnicalIndex.common import DataSeries
+from Technical.util.base import RSEventWindow
+from Technical.util.common import DataSeries
 
 
 class RSI(DataSeries):

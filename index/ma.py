@@ -5,8 +5,8 @@ Author: zero
 Email: 13256937698@163.com
 Date: 2018-09-24
 """
-from TechnicalIndex.base import SMAEventWindow
-from TechnicalIndex.common import DataSeries
+from Technical.util.base import SMAEventWindow
+from Technical.util.common import DataSeries
 import pandas as pd
 
 class MA(DataSeries):

@@ -5,12 +5,13 @@ Author: zero
 Email: 13256937698@163.com
 Date: 2018-09-29
 """
-from TechnicalIndex.base import EMAEventWindow
-from TechnicalIndex.common import DataSeries
+from Technical.util.base import EMAEventWindow
+from Technical.util.common import DataSeries
 import pandas as pd
 
 
 class MACD(DataSeries):
+    """实现macd的计算"""
 
     def __init__(self, data,  fastEMA, slowEMA, signalEMA, maxLen=None):
         assert (fastEMA > 0)
@@ -47,7 +48,7 @@ class MACD(DataSeries):
 
 
 class MacdManger:
-
+    """计算macd的控制器"""
     def __init__(self, close_value, last_macd=None, fastEMA=12, slowEMA=26, signalEMA=9):
         self.__last_macd = last_macd
         self.__close_value = close_value

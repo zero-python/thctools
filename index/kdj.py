@@ -6,8 +6,8 @@ Email: 13256937698@163.com
 Date: 2018-09-19
 """
 
-from TechnicalIndex.base import KDJEvenWindow, RSVEvenWindows
-from TechnicalIndex.common import DataSeries
+from Technical.util.base import KDJEvenWindow, RSVEvenWindows
+from Technical.util.common import DataSeries
 import pandas as pd
 
 
