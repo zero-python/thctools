@@ -7,7 +7,8 @@ Date: 2018-09-20
 """
 
 from decimal import Decimal, getcontext
-from thctools import WindowEvent
+
+from thctools.util import WindowEvent
 
 
 class EMAEventWindow(WindowEvent):

@@ -13,7 +13,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
 
 setup(
     name="thctools",
-    version="1.0.0",
+    version="1.0.1",
     author="zero",
     author_email="13256937698@163.com",
     description="Used as an indicator to study the trend of the stock market. ",
